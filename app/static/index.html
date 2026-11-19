@@ -1,0 +1,184 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>AlertaEdu | Panel académico</title><link rel="stylesheet" href="./style.css"/></head><body>
+<div class="app"><aside class="sidebar"><div class="brand"><div class="brand-icon">✦</div><div>Alerta<span>Edu</span><small>PLATAFORMA ACADÉMICA</small></div></div><div class="nav-group">MENÚ PRINCIPAL</div><nav id="navigation"><button class="nav active" data-page="dashboard"><span>▦</span> Panel general</button><button class="nav" data-page="students"><span>♙</span> Estudiantes</button><button class="nav" data-page="alerts"><span>◈</span> Alertas y seguimiento</button><button class="nav" data-page="prediction"><span>✧</span> Predicción con IA</button><button class="nav" data-page="reports"><span>▤</span> Reportes</button><button class="nav" id="users-nav" data-page="users" hidden><span>⚙</span> Usuarios</button><button class="nav" data-page="account"><span>♙</span> Mi cuenta</button></nav></aside>
+<main><header class="topbar"><div><div class="crumb">Sistema académico <span>/</span> <b id="breadcrumb">Panel general</b></div></div><div class="topright"><div class="avatar" id="user-avatar">AD</div><div class="account"><span id="user-role">Administrador</span><small id="user-name">Cuenta AlertaEdu</small></div><button class="secondary logout-button" type="button" id="logout">Cerrar sesión</button></div></header><div class="content">
+<section class="page active" id="dashboard"><div class="heading"><div><div class="eyebrow">VISTA GENERAL</div><h1>Panel de control <span class="wave">✳</span></h1><p>Resumen del monitoreo académico y señales de alerta.</p></div><button class="primary" data-go="students">Ver estudiantes →</button></div><div class="metrics"><article class="metric"><div class="metric-top">Total de estudiantes <span class="metric-icon blue">♙</span></div><div class="metric-num" id="total">—</div><div class="metric-foot">Registros de prueba</div></article><article class="metric"><div class="metric-top">Riesgo alto <span class="metric-icon red">!</span></div><div class="metric-num" id="high">—</div><div class="metric-foot">Necesitan atención prioritaria</div></article><article class="metric"><div class="metric-top">Riesgo medio <span class="metric-icon amber">◉</span></div><div class="metric-num" id="medium">—</div><div class="metric-foot">Requieren observación</div></article><article class="metric"><div class="metric-top">En seguimiento <span class="metric-icon green">✓</span></div><div class="metric-num" id="followup">—</div><div class="metric-foot">Casos con seguimiento iniciado</div></article></div><div class="two-col"><article class="panel"><div class="panel-head"><div><h2>Distribución del riesgo</h2><p>Clasificación ilustrativa de registros académicos</p></div></div><div class="chart-zone"><div class="donut" id="donut"><div class="donut-inner"><b id="donut-total">8</b><span>Registros</span></div></div><div class="legend"><div><i style="background:#ed6780"></i> Riesgo alto <b id="leg-high">—</b></div><div><i style="background:#efb955"></i> Riesgo medio <b id="leg-medium">—</b></div><div><i style="background:#49b6a0"></i> Riesgo bajo <b id="leg-low">—</b></div></div></div></article><article class="panel"><div class="panel-head"><div><h2>Acciones recomendadas</h2><p>Acciones para la atención preventiva</p></div></div><div class="action"><div class="action-icon pink">01</div><div><b>Identificación temprana</b><p>Detectar patrones académicos asociados al abandono.</p></div></div><div class="action"><div class="action-icon orange">02</div><div><b>Notificaciones de riesgo</b><p>Priorizar los casos que necesitan atención de tutoría.</p></div></div><div class="action"><div class="action-icon teal">03</div><div><b>Seguimiento académico</b><p>Registrar acciones y evaluar su evolución.</p></div></div></article></div><article class="panel tablepanel"><div class="panel-head"><div><h2>Estudiantes que requieren revisión</h2><p>Estudiantes que requieren revisión académica</p></div><button class="linkbtn" data-go="students">Ver todos →</button></div><div class="tablewrap"><table><thead><tr><th>ESTUDIANTE</th><th>CARRERA</th><th>PROMEDIO</th><th>RIESGO</th><th>SEGUIMIENTO</th></tr></thead><tbody id="dash-table"></tbody></table></div></article></section>
+<section class="page" id="students"><div class="heading"><div><div class="eyebrow">GESTIÓN ACADÉMICA</div><h1>Estudiantes</h1><p>Gestiona estudiantes ficticios y sus materias reprobadas.</p></div><div class="inline-actions"><button class="secondary" id="new-student">+ Nuevo estudiante</button><button class="primary" id="export-students">↓ Exportar CSV</button></div></div><article class="panel"><div class="filters"><input type="search" id="search" placeholder="⌕  Buscar estudiante, código o carrera..."/><select id="risk-filter"><option value="">Todos los riesgos</option><option>Alto</option><option>Medio</option><option>Bajo</option></select></div><div class="tablewrap"><table><thead><tr><th>CÓDIGO / ESTUDIANTE</th><th>CARRERA</th><th>SEMESTRE</th><th>PROMEDIO</th><th>ASISTENCIA</th><th>REPROBADAS</th><th>RIESGO</th><th>ESTADO</th><th>ACCIONES</th></tr></thead><tbody id="students-table"></tbody></table></div><div class="table-bottom" id="student-count"></div></article><div class="panel import-panel" id="excel-importer">
+  <div class="panel-head">
+    <div><h2>Importar estudiantes desde Excel</h2>
+      <p>Sube un Excel o CSV. Al guardarlo se asigna automáticamente un riesgo orientativo (Alto, Medio o Bajo) y queda registrado en Supabase PostgreSQL.</p></div>
+    <span class="import-chip">IMPORTACIÓN MASIVA</span>
+  </div>
+  <div class="import-steps">
+    <div><b>1</b><span>Descarga la plantilla y completa los estudiantes</span></div>
+    <div><b>2</b><span>Selecciona el Excel y revisa sus filas</span></div>
+    <div><b>3</b><span>Guarda estudiantes y sus evaluaciones automáticas</span></div>
+  </div>
+  <div class="import-controls">
+    <a class="secondary import-template" href="/api/import/template" download>↓ Descargar plantilla Excel</a>
+    <label class="import-file-label" for="import-file">Archivo de estudiantes (.xlsx o .csv)
+      <input type="file" id="import-file" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv">
+    </label>
+    <button type="button" class="secondary" id="import-preview">Revisar archivo</button>
+  </div>
+  <div id="import-result" class="import-result" role="status" aria-live="polite">No se ha seleccionado ningún archivo.</div>
+  <div id="import-validation" hidden>
+    <div class="import-summary" id="import-summary"></div>
+    <div id="import-errors"></div>
+    <div class="tablewrap"><table><thead><tr><th>FILA</th><th>CÓDIGO</th><th>NOMBRE</th><th>CARRERA</th><th>PROMEDIO</th><th>ASISTENCIA</th><th>MATERIAS</th><th>RIESGO ORIENTATIVO</th><th>ESTADO</th></tr></thead><tbody id="import-table"></tbody></table></div>
+    <div class="import-confirm-row">
+      <label>Si el código ya existe:
+        <select id="import-duplicates"><option value="skip">Omitirlo (recomendado)</option><option value="update">Actualizar sus datos académicos</option></select>
+      </label>
+      <button type="button" class="primary" id="import-confirm" disabled>Importar y evaluar automáticamente</button>
+    </div>
+    <p class="muted">La clasificación utiliza reglas académicas demostrativas sobre promedio, asistencia y materias reprobadas. No equivale a una predicción con inteligencia artificial. Al actualizar se conservan los historiales anteriores.</p>
+  </div>
+  <div class="auto-review" aria-label="Evaluar registros anteriores">
+    <div><strong>¿Ya importaste los 200 estudiantes?</strong><p class="muted">Evalúa los registros que todavía aparecen como «Sin evaluar», sin volver a importar el Excel ni duplicar historiales.</p></div>
+    <button id="auto-evaluate-pending" class="secondary" type="button">Evaluar estudiantes pendientes</button>
+  </div>
+  <div class="import-result" id="auto-evaluation-result" role="status" aria-live="polite"></div>
+</div>
+<div id="student-editor" class="panel editor" hidden>
+<h2 id="editor-title">Registrar estudiante</h2>
+<form id="student-form">
+<div class="editor-grid"><label>Código académico<input name="id" required pattern="[A-Za-z0-9_-]{2,32}" placeholder="EST-009"></label><label>Nombre completo<input name="nombre" required minlength="2"></label><label>Carrera<input name="carrera" required minlength="2"></label><label>Semestre<input name="semestre" type="number" min="1" max="15" required></label><label>Promedio /10<input name="promedio" type="number" step="0.1" min="0" max="10" required></label><label>Asistencia %<input name="asistencia" type="number" min="0" max="100" step="0.1" required></label></div>
+<label>Materias reprobadas (una por línea: Materia | Nota)</label><textarea name="materias" rows="4" placeholder="Programación II | 5.8
+Matemáticas | 6.2"></textarea><p class="muted">Solo añade asignaturas efectivamente reprobadas; notas de 0 a 10.</p>
+<div class="inline-actions"><button type="submit" class="primary">Guardar estudiante</button><button type="button" class="secondary" id="cancel-editor">Cancelar</button></div><p id="editor-message" class="inline-note" role="status"></p>
+</form></div><article class="panel" id="student-detail" hidden></article></section>
+<section class="page" id="alerts"><div class="heading"><div><div class="eyebrow">ATENCIÓN PREVENTIVA</div><h1>Alertas y seguimiento</h1><p>Registro de acciones preventivas y responsables.</p></div></div><article class="panel"><div class="panel-head"><div><h2>Casos prioritarios</h2><p>Las intervenciones quedan guardadas en Supabase, mediante el servidor seguro de AlertaEdu.</p></div></div><div id="alert-list" class="alert-list"></div><p class="muted">Los riesgos precargados son ilustrativos; nuevos estudiantes figuran como «Sin evaluar» hasta integrar un modelo válido.</p></article>
+<!-- [RF05-RF08-BEGIN] -->
+<article class="panel" id="rf-auto-alert-panel" style="margin-top:20px">
+  <div class="panel-head"><div><h2>RF-08 · Avisos automáticos de cambios de riesgo</h2>
+    <p>Se genera un aviso interno si una evaluación posterior pasa a riesgo Alto o cruza el umbral configurado. No se envían correos ni mensajes externos.</p></div>
+    <button type="button" id="refresh-auto-alerts" class="secondary">Actualizar avisos</button></div>
+  <p id="auto-alert-summary" class="muted" role="status" aria-live="polite">Consultando avisos...</p>
+  <div class="filters"><select id="auto-alert-filter" aria-label="Filtrar avisos"><option>Todas</option><option>Nueva</option><option>En seguimiento</option><option>Cerrada</option></select></div>
+  <div id="auto-alert-records" class="alert-list"></div>
+  <p class="muted">Los estudiantes en riesgo alto ya importados no generan avisos retroactivos. Prueba editando/evaluando uno que antes tenía riesgo Bajo o Medio.</p>
+</article>
+<!-- [RF05-RF08-END] -->
+</section>
+<section class="page" id="prediction"><div class="heading"><div><div class="eyebrow">INTELIGENCIA ARTIFICIAL</div><h1>Módulo de predicción</h1><p>Evalúa escenarios académicos de prueba con reglas orientativas.</p></div></div><div class="prediction-layout"><article class="panel"><div class="panel-head"><div><h2>Evaluar estudiante</h2><p>Ejercicio orientativo, no una predicción de IA</p></div></div><form id="prediction-form"><label>Código académico<input required placeholder="Ej. EST-0009"/></label><label>Promedio académico<input type="number" min="0" max="10" step="0.1" placeholder="Ej. 7.5" required/></label><label>Asistencia (%)<input type="number" min="0" max="100" placeholder="Ej. 85" required/></label><label>Materias reprobadas<input type="number" min="0" placeholder="Ej. 1" required/></label><button type="submit" class="primary wide">Evaluar riesgo →</button><div class="scenario-result" id="scenario-result" aria-live="polite"></div><p class="inline-note" id="prediction-message">Este formulario aplica reglas académicas ilustrativas. No calcula probabilidades mediante IA.</p></form>
+<div class="ml-section" style="margin-top:22px;border-top:1px solid #e7ebf6;padding-top:16px">
+  <h2>Predicción con Machine Learning</h2>
+  <p id="ml-status" class="inline-note">Comprobando si existe un modelo entrenado y validado...</p>
+  <button type="button" id="ml-predict-btn" class="secondary" disabled>Predecir con IA a partir del código</button>
+  <div id="ml-prediction-result" role="status" aria-live="polite" style="margin-top:12px"></div>
+  <small>Este módulo usa el expediente académico almacenado. Las reglas orientativas no son probabilidades.</small>
+</div>
+
+<!-- [RF04-UCI-LAB-BEGIN] -->
+<div class="ml-section" id="uci-lab" style="margin-top:22px;border-top:1px solid #e7ebf6;padding-top:16px">
+  <h2>Laboratorio de IA · Prueba histórica UCI</h2>
+  <p>Ejecuta predicciones del modelo Random Forest con casos separados para evaluación. <b>No evalúa los 5.008 estudiantes de AlertaEdu</b>, porque las variables institucionales no corresponden al dataset UCI.</p>
+  <p id="uci-lab-status" class="inline-note" role="status">Comprobando el modelo experimental...</p>
+  <label>Caso del conjunto de prueba UCI
+    <input type="number" min="1" step="1" id="uci-test-case" value="1" required aria-label="Número de caso histórico UCI">
+  </label>
+  <button class="secondary" type="button" id="uci-lab-predict" disabled>Predecir caso histórico con Random Forest</button>
+  <div class="scenario-result" id="uci-lab-result" role="status" aria-live="polite"></div>
+
+<!-- [RF06-RF07-BEGIN] -->
+<div id="rf06-rf07" style="margin-top:20px;padding-top:14px;border-top:1px solid #e7ebf6">
+  <h3>RF-06 · Explicación de predicciones (SHAP)</h3>
+  <p class="muted">Explica qué variables aumentan o reducen la estimación experimental del caso UCI elegido. No demuestra causas ni se aplica a estudiantes de AlertaEdu.</p>
+  <button class="secondary" id="rf06-explain" type="button">Explicar caso seleccionado con SHAP</button>
+  <div id="rf06-result" class="scenario-result" role="status" aria-live="polite"></div>
+  <h3 style="margin-top:20px">RF-07 · Versiones de modelos experimentales</h3>
+  <p class="muted">Reentrena desde PowerShell con <code>python REENTRENAR_RF07.py</code>. Las versiones nuevas no sustituyen el modelo del laboratorio ni los expedientes institucionales.</p>
+  <button class="secondary" id="rf07-versions" type="button">Consultar historial de versiones</button>
+  <div id="rf07-result" class="scenario-result" role="status" aria-live="polite"></div>
+</div>
+<!-- [RF06-RF07-END] -->
+  <p class="muted">Experimento académico. La probabilidad no se ha validado para estudiantes de esta institución ni sustituye el criterio de tutores.</p>
+</div>
+<!-- [RF04-UCI-LAB-END] -->
+</article><article class="panel steps-panel"><h2>Evolución del módulo predictivo</h2><div class="step"><span>1</span><div><b>Incorporar datos reales</b><p>Seleccionar una fuente académica autorizada, con definición de deserción.</p></div></div><div class="step"><span>2</span><div><b>Entrenar y evaluar el modelo</b><p>Preprocesamiento, separación de datos y métricas de desempeño.</p></div></div><div class="step"><span>3</span><div><b>Conectar la predicción</b><p>Publicar el modelo en la API y registrar resultados en la base de datos.</p></div></div><div class="model-status"><span>◌</span><div><b>Modelo institucional pendiente de validación</b><small>Laboratorio histórico UCI disponible; aún no hay predicción institucional validada</small></div></div></article></div></section>
+<section class="page" id="reports"><div class="heading"><div><div class="eyebrow">ANÁLISIS</div><h1>Reportes</h1><p>Exporta los registros académicos almacenados en Supabase PostgreSQL.</p></div></div><div class="report-grid"><article class="panel report"><div class="report-icon">▤</div><h2>Listado de estudiantes</h2><p>Tabla CSV con estudiantes, materias y seguimiento.</p><button class="primary" id="export-report">↓ Descargar CSV</button></article><article class="panel report"><div class="report-icon purple">◫</div><h2>Estado de integración</h2><p>Consulta si está disponible la base de datos y el modelo predictivo.</p><button class="secondary" id="check-status">Consultar estado</button><pre id="status-json"></pre></article></div>
+<!-- [RF10-RF13-BEGIN] -->
+<article class="panel" style="margin-top:20px" id="rf10-panel">
+  <h2>RF-10 · Evolución después de intervenciones</h2>
+  <p class="muted">Compara puntuaciones de evaluaciones anteriores y posteriores al seguimiento. No demuestra que la intervención causó el cambio.</p>
+  <button class="secondary" id="rf10-refresh" type="button">Consultar evolución</button>
+  <div id="rf10-output" role="status" aria-live="polite" class="rf-info">Sin consultar.</div>
+</article>
+<article class="panel" style="margin-top:20px" id="rf11-panel">
+  <h2>RF-11 · Indicadores por carrera</h2>
+  <p class="muted">Distribución académica por reglas. No equivale a tasas históricas ni estimadas de retención: aún faltan datos de permanencia, facultad, periodo y modalidad.</p>
+  <button class="secondary" id="rf11-refresh" type="button">Consultar indicadores</button>
+  <div id="rf11-output" role="status" aria-live="polite" class="rf-info">Sin consultar.</div>
+</article>
+<article class="panel" style="margin-top:20px" id="rf12-panel">
+  <h2>RF-12 y RF-13 · Filtros y exportación operativa</h2>
+  <p class="muted">Filtros desde Supabase PostgreSQL. Exportación CSV, Excel o PDF respetando permisos para expedientes individuales.</p>
+  <form id="rf12-form" class="rf-filters">
+    <label>Buscar código/nombre<input name="buscar" type="search" maxlength="80" placeholder="Ej. EST-0013" /></label>
+    <label>Carrera<input name="carrera" type="text" maxlength="100" placeholder="Computación" /></label>
+    <label>Riesgo<select name="riesgo"><option value="">Todos</option><option>Alto</option><option>Medio</option><option>Bajo</option><option>Sin evaluar</option></select></label>
+    <label>Semestre<input name="semestre" type="number" min="1" max="20" /></label>
+    <label>Promedio mínimo<input name="promedio_desde" type="number" min="0" max="10" step="0.1" /></label>
+    <label>Promedio máximo<input name="promedio_hasta" type="number" min="0" max="10" step="0.1" /></label>
+    <label>Asignatura crítica<input name="materia" type="search" maxlength="100" placeholder="Ej. Cálculo" /></label>
+    <label>Intervención<select name="estado"><option value="">Cualquier estado</option><option>Pendiente</option><option>En seguimiento</option><option>Atendido</option></select></label>
+    <button class="primary" type="submit">Aplicar filtros</button>
+  </form>
+  <div class="rf-export-actions">
+    <button class="secondary" id="rf13-csv" type="button">Exportar CSV</button>
+    <button class="secondary" id="rf13-xlsx" type="button">Exportar Excel</button>
+    <button class="secondary" id="rf13-pdf" type="button">Exportar PDF (máx. 300)</button>
+  </div>
+  <div id="rf12-output" role="status" aria-live="polite" class="rf-info">Aplica filtros para consultar.</div>
+</article>
+<!-- [RF10-RF13-END] -->
+</section>
+<section class="page" id="users">
+<div class="heading"><div><div class="eyebrow">ADMINISTRACIÓN</div><h1>Usuarios del sistema</h1><p>Crea cuentas con permisos según su rol.</p></div></div>
+<div class="two-col"><article class="panel"><h2>Crear usuario</h2>
+<form id="create-user-form" class="account-form">
+<label>Nombre de usuario<input name="username" required minlength="3" maxlength="40" pattern="[A-Za-z0-9_.-]{3,40}" autocomplete="off" placeholder="tutor01"></label>
+<label>Contraseña temporal<input type="password" name="password" required minlength="10" maxlength="128" autocomplete="new-password" placeholder="Al menos 10 caracteres"></label>
+<label>Rol<select name="role"><option>Docente</option><option>Tutor</option><option>Directivo</option><option>Administrador</option></select></label>
+<button class="primary" type="submit">Crear cuenta</button><p id="create-user-message" class="inline-note" role="status"></p>
+</form></article>
+<article class="panel"><h2>Cuentas existentes</h2><div class="tablewrap"><table><thead><tr><th>USUARIO</th><th>ROL</th><th>ESTADO</th></tr></thead><tbody id="users-table"></tbody></table></div></article></div>
+
+<!-- [RF05-RF08-BEGIN] -->
+<article class="panel" id="risk-settings-panel" style="margin-top:20px">
+  <h2>RF-05 · Umbrales de riesgo académico</h2>
+  <p class="muted">Configuración de la puntuación por reglas (0 a 9 puntos), NO de una probabilidad de deserción ni del modelo UCI. Los cambios se aplican en las próximas evaluaciones; no modifican el historial existente.</p>
+  <form class="rf-risk-form" id="risk-settings-form">
+    <label>Desde cuántos puntos es riesgo MEDIO <input type="number" name="medium_points" min="1" max="8" required value="3"></label>
+    <label>Desde cuántos puntos es riesgo ALTO <input type="number" name="high_points" min="2" max="9" required value="6"></label>
+    <label>Crear aviso si la puntuación sube hasta <input type="number" name="notify_points" min="2" max="9" required value="7"></label>
+    <button type="submit" class="primary">Guardar umbrales</button>
+  </form>
+  <p id="risk-settings-message" role="status" aria-live="polite" class="inline-note"></p>
+</article>
+<!-- [RF05-RF08-END] -->
+<p class="muted">Administrador: gestión total e importación Excel. Tutor: evaluación y seguimiento. Docente y Directivo: consulta y reportes.</p>
+</section>
+<section class="page" id="account"><div class="heading"><div><div class="eyebrow">SEGURIDAD</div><h1>Mi cuenta</h1><p>Actualiza tu contraseña de acceso.</p></div></div>
+<article class="panel account-panel"><h2 id="account-identity">Cuenta AlertaEdu</h2>
+<form id="change-password-form" class="account-form">
+<label>Contraseña actual<input type="password" name="current_password" required autocomplete="current-password"></label>
+<label>Contraseña nueva<input type="password" name="new_password" required minlength="10" maxlength="128" autocomplete="new-password"></label>
+<button class="primary" type="submit">Cambiar contraseña</button><p id="password-message" class="inline-note" role="status"></p>
+</form></article>
+<!-- [ALERTAEDU-GMAIL-BEGIN] -->
+<article class="panel account-panel" id="gmail-configuration-panel" style="margin-top:18px">
+  <h2>Correo de recuperación (Gmail)</h2>
+  <p class="muted">Registra y verifica tu Gmail para poder recuperar tu acceso desde «¿Olvidaste tu contraseña?». No se reemplaza ninguna contraseña de forma automática.</p>
+  <p id="gmail-current-status" class="inline-note" role="status">Consultando estado del correo...</p>
+  <form id="gmail-register-form" class="account-form">
+    <label>Tu Gmail<input type="email" name="email" required maxlength="254" placeholder="tucuenta@gmail.com" autocomplete="email"></label>
+    <label>Tu contraseña actual de AlertaEdu<input type="password" name="current_password" required autocomplete="current-password"></label>
+    <button type="submit" class="primary">Enviar verificación a Gmail</button>
+  </form>
+  <p id="gmail-register-message" class="inline-note" role="status"></p>
+  <p class="muted">Abre el correo de verificación en el mismo PC donde corre AlertaEdu o copia el código en «Verificar correo» de la pantalla de inicio. El código vence en 30 minutos.</p>
+</article>
+<!-- [ALERTAEDU-GMAIL-END] -->
+</section>
+<footer>ALERTAEDU · PROYECTO ACADÉMICO <span>Versión 0.2 · Base Supabase PostgreSQL · Laboratorio UCI experimental</span></footer></div></main></div><script src="./app.js"></script></body></html>

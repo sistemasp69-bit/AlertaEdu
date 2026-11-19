@@ -1,0 +1,91 @@
+ALERTAEDU - ACTUALIZACION PROGRAMADA (RF-03) Y PREDICCION ML (RF-04)
+====================================================================
+
+IMPORTANTE: esta versión NO incluye una base de datos de estudiantes ni modelos
+entrenados. No borres ni sustituyas tu alertaedu.sqlite3 existente.
+
+1. ACTUALIZAR SIN PERDER DATOS
+----------------------------
+- En la PC original, detén FastAPI (Ctrl+C).
+- Crea un respaldo de alertaedu.sqlite3 (preferible copia en otra carpeta).
+- Del ZIP copia app/main.py y app/static/index.html, app/static/app.js y
+  app/ia_core.py dentro de tu AlertaEdu existente; copia además los archivos
+  *.py nuevos, *.bat, modelos/ y fuente_actualizaciones/ (si no existen).
+- Mantén alertaedu.sqlite3, los usuarios y el resto del proyecto original.
+- Instala paquetes: python -m pip install -r requirements.txt
+- Ejecuta el servidor: python -m uvicorn app.main:app --reload
+- El login y las funciones de Excel/SQLite no se eliminan.
+
+2. RF-03 - ACTUALIZACION DIARIA/SEMANAL
+--------------------------------------
+- La institución debe proporcionar datos actualizados mediante una exportación
+  autorizada en Excel .xlsx, con columnas de la plantilla AlertaEdu.
+- Coloca el archivo en fuente_actualizaciones/estudiantes_actualizados.xlsx
+- Admite hasta 2.500 filas por archivo. Si son más, dividir por lotes.
+- Prueba manualmente ANTES de programar:
+    python actualizar_datos.py
+- Esta tarea valida TODO el archivo antes de modificar la base de datos.
+- Crea estudiantes nuevos, modifica los existentes si cambiaron sus datos,
+  conserva historiales de intervenciones, no elimina estudiantes ausentes.
+- El riesgo se recalcula por REGLAS orientativas (no ML).
+- Genera actualizaciones.log con cada ejecución.
+- En el Programador de tareas de Windows:
+   a) Crear tarea básica > nombre "AlertaEdu Actualización".
+   b) Cada semana > lunes > 08:00 (o diario, según el requerimiento).
+   c) Iniciar un programa > seleccionar ACTUALIZAR_CADA_SEMANA.bat de esta carpeta.
+   d) Terminar y probar con botón "Ejecutar".
+- La PC debe estar encendida y con acceso al archivo. El Programador de tareas
+  puede ejecutar los scripts aunque FastAPI y Chrome estén cerrados.
+- Esto solo programa el consumo de un archivo local: no crea una conexión a
+  bases institucionales por sí mismo. La exportación debe actualizarse por un
+  proceso ETL/API autorizado para cumplir plenamente RF-03.
+
+3. RF-04 - IA CON PROBABILIDAD ENTRE 0 Y 1
+-----------------------------------------
+NECESITAS un CSV HISTORICO real/legítimo, autorizadamente pseudonimizado,
+con estas cuatro columnas exactas:
+    promedio,asistencia,reprobadas,deserto
+
+Variable deserto: 1 = sí abandonó; 0 = siguió estudiando.
+LAS TRES VARIABLES deben provenir de una fecha ANTERIOR al abandono, y deserto
+es el desenlace posterior. Registrar una definición estable de abandono y
+un horizonte predictivo (por ejemplo: abandono en el siguiente semestre).
+No crees deserto desde los niveles Alto/Medio/Bajo de AlertaEdu.
+NO uses nuestros Excel ficticios para entrenar y atribuir capacidades reales.
+
+Necesitas al menos 100 historiales etiquetados y 30 por cada clase para
+este prototipo; tener esa cantidad no garantiza métricas aceptables.
+
+Instala scikit-learn y joblib (incluidos en requirements.txt).
+Copia el CSV autorizado y ejecuta:
+    python entrenar_ia.py --csv HISTORIAL_VERIFICADO.csv --confirmar-datos-verificados
+
+El script usa RandomForest calibrado y un test separado; imprime F1, Recall,
+precision, AUC y Brier. NO activa el modelo si F1 < 0.80 o Recall < 0.85.
+Antes de uso real también valida temporalmente por cohortes/periodos,
+sesgos, calibración, calidad del dato y pertinencia de variables.
+
+Si se aprueba, crea archivos locales en modelos/ y el menú Predicción con IA
+habilita el botón 'Predecir con IA a partir del código'. Esa petición toma
+el promedio/asistencia/reprobadas reales del estudiante guardado, devuelve
+probabilidad (0..1) y guarda un historial separado en SQLite (ml_predictions).
+El riesgo de REGLAS no se sobreescribe por el resultado de IA.
+
+Puedes recalcular todas las probabilidades manualmente con:
+    python recalcular_ia.py
+
+ACTUALIZAR_CADA_SEMANA.bat hace primero la actualización del archivo y,
+si el modelo existe y está aprobado, recalcula las probabilidades para todos.
+
+4. COMPROBACIONES
+-----------------
+En navegador: http://127.0.0.1:8000 > iniciar sesión > Predicción con IA.
+La API autenticada GET /api/ia/estado indica si hay modelo validado.
+Antes de tener dataset válido, mostrará NO DISPONIBLE: eso es esperado.
+
+Para verificar registros existentes (en carpeta correcta):
+python -c "import sqlite3; c=sqlite3.connect('file:alertaedu.sqlite3?mode=ro',uri=True); print(c.execute('SELECT COUNT(*) FROM students').fetchone()[0]); c.close()"
+
+El sistema sigue siendo un PROTOTIPO local. No utilizar información personal
+sin permiso y controles institucionales de protección de datos. No exponer
+FastAPI directamente a internet.

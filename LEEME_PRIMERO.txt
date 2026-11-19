@@ -1,0 +1,23 @@
+IMPORTANTE: ESTE ZIP NO TRAE .env (CONTRASENAS).
+Usa ABRIR_ALERTAEDU_WINDOWS.bat del exterior para evitar errores de carpeta.
+Diagnostico: python DIAGNOSTICAR_CONFIGURACION.py
+
+AlertaEdu - Supabase real (proyecto lwjnmebmotcnkjrhhbyl)
+
+1. Extrae este ZIP en Windows.
+2. Desde Supabase > Connect copia Session pooler (recomendado para redes IPv4).
+3. Haz doble clic en CONFIGURAR_WINDOWS.bat; pega esa URL o pulsa Enter
+   para conexión directa, e introduce SOLO EN TU PC la contraseña de PostgreSQL.
+   Puedes añadir aquí el Gmail remitente y una contraseña de APLICACIÓN.
+4. Haz doble clic en INICIAR_WINDOWS.bat.
+5. Abre http://127.0.0.1:8000 e inicia en /setup.
+6. Vincula y verifica tu correo en Mi cuenta para habilitar Olvidé mi contraseña.
+
+La base remota ya tiene 13 tablas. NO compartas .env ni la clave PostgreSQL.
+La clave sb_publishable_... NO sustituye la contraseña de PostgreSQL.
+El comando supabase link vincula el proyecto para migraciones con CLI,
+pero NO sustituye DATABASE_URL de FastAPI.
+
+Consulta CONFIGURACION.md para más detalles.
+
+Version final: incluye ESQUEMA_SUPABASE.sql y correcciones de recuperación de contraseña.

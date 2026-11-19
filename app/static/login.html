@@ -1,0 +1,108 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Iniciar sesión | AlertaEdu</title><style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:#f3f6fc;color:#172a50;min-height:100vh;display:flex}.left{background:linear-gradient(160deg,#101f43,#253a77);color:white;width:47%;padding:clamp(32px,5vw,80px);display:flex;flex-direction:column;justify-content:space-between}.logo{font-size:28px;font-weight:800}.logo span{color:#8daaff}.glyph{display:inline-grid;place-items:center;background:#506af3;border-radius:12px;width:46px;height:46px;margin-right:12px}.left h1{font-size:clamp(34px,4vw,60px);letter-spacing:-2px;line-height:1.12;margin:0 0 16px}.left p{color:#c7d3ef;line-height:1.8;max-width:470px}.left small{color:#aab9df}.right{flex:1;display:flex;align-items:center;justify-content:center;padding:30px}.formbox{width:100%;max-width:410px}.eyebrow{font-size:12px;color:#5267df;font-weight:800;letter-spacing:2px}.formbox h2{font-size:31px;margin:14px 0 8px}.muted{font-size:14px;color:#7c88a1;line-height:1.65;margin-bottom:28px}label{display:block;font-size:13px;font-weight:700;margin:16px 0 8px}input{width:100%;padding:14px;border:1px solid #d8e0ef;border-radius:10px;font-size:15px;background:white;outline:none}input:focus{border-color:#5367ed;box-shadow:0 0 0 3px #5267ed1a}button{margin-top:23px;width:100%;padding:15px;color:white;background:#5065ee;border:none;border-radius:10px;font-weight:750;cursor:pointer;font-size:14px}button:hover{background:#384edb}button:disabled{opacity:.7}#message{min-height:25px;color:#b33142;font-size:13px;margin-top:15px}.note{font-size:12px;color:#8995ad;margin-top:20px}.notice{background:#edf2ff;border-radius:10px;padding:12px;font-size:13px;margin-bottom:15px;color:#4358a5}@media(max-width:800px){body{display:block}.left{width:100%;padding:24px;min-height:170px}.left h1,.left p,.left small{display:none}.right{min-height:calc(100vh - 170px)}}
+</style><style>
+/* [ALERTAEDU-GMAIL-BEGIN] */
+.gmail-link,.gmail-back{width:auto;padding:6px 0;background:none!important;color:#5267df!important;text-align:left;box-shadow:none!important;margin-top:12px;font-weight:700;text-decoration:underline}
+.gmail-link:hover,.gmail-back:hover{color:#273cbd!important}
+#gmail-forgot-form,#gmail-reset-form,#gmail-verify-form{margin-top:18px}
+/* [ALERTAEDU-GMAIL-END] */
+</style>
+</head><body><aside class="left"><div class="logo"><span class="glyph">✦</span>Alerta<span>Edu</span></div><div><h1>Gestión académica inteligente.</h1><p>Consulta estudiantes, evalúa señales de riesgo y coordina intervenciones desde una plataforma académica.</p></div><small>ALERTAEDU · PROYECTO ACADÉMICO · ACCESO SEGURO</small></aside><main class="right"><div class="formbox"><div class="eyebrow">ACCESO AL SISTEMA</div><h2 id="heading">Iniciar sesión</h2><p class="muted" id="subtitle">Ingresa tus credenciales para acceder a AlertaEdu.</p><div class="notice" id="notice" hidden>Primera ejecución: crea tu cuenta de administrador. Los estudiantes de tu base Supabase PostgreSQL se conservarán.</div><form id="auth-form"><label for="username">Usuario</label><input id="username" autocomplete="username" minlength="3" maxlength="40" required placeholder="Tu nombre de usuario"><label for="password">Contraseña</label><input id="password" type="password" autocomplete="current-password" minlength="8" required placeholder="Tu contraseña"><div id="setup-token-group" hidden><label for="setup-token">Código privado de instalación (solo servidor público)</label><input id="setup-token" type="password" autocomplete="off" placeholder="El código que guardaste en Render"></div><button type="submit" id="submit">Ingresar a AlertaEdu →</button></form>
+<!-- [ALERTAEDU-GMAIL-BEGIN] -->
+<button type="button" id="gmail-forgot-link" class="gmail-link">¿Olvidaste tu contraseña? Recuperar por Gmail</button>
+<button type="button" id="gmail-verify-link" class="gmail-link" style="margin-left:10px">Verificar correo</button>
+<form id="gmail-forgot-form" hidden>
+  <p class="notice">Escribe el Gmail que verificaste desde <b>Mi cuenta</b>. Si existe, recibirás un correo con un enlace y un código de recuperación.</p>
+  <label for="gmail-forgot-address">Gmail registrado</label>
+  <input id="gmail-forgot-address" type="email" autocomplete="email" required maxlength="254" placeholder="tuusuario@gmail.com">
+  <button id="gmail-send-button" type="submit">Enviar recuperación a Gmail</button>
+  <button class="gmail-back" type="button">Volver al login</button>
+</form>
+<form id="gmail-reset-form" hidden>
+  <p class="notice">Introduce el código recibido en Gmail. El código sirve una sola vez y expira en 15 minutos.</p>
+  <label for="gmail-reset-code">Código recibido en Gmail</label>
+  <input id="gmail-reset-code" required minlength="30" maxlength="160" autocomplete="off">
+  <label for="gmail-reset-password">Nueva contraseña (mínimo 12 caracteres)</label>
+  <input id="gmail-reset-password" type="password" required minlength="12" maxlength="128" autocomplete="new-password">
+  <label for="gmail-reset-confirm">Confirmar contraseña nueva</label>
+  <input id="gmail-reset-confirm" type="password" required minlength="12" maxlength="128" autocomplete="new-password">
+  <button id="gmail-reset-button" type="submit">Guardar nueva contraseña</button>
+  <button class="gmail-back" type="button">Volver al login</button>
+</form>
+<form id="gmail-verify-form" hidden>
+  <p class="notice">Copia el código de confirmación que te llegó a Gmail. Cada cuenta debe confirmar su correo para poder recuperar la contraseña.</p>
+  <label for="gmail-verify-code">Código de verificación</label>
+  <input id="gmail-verify-code" required minlength="30" maxlength="160" autocomplete="off">
+  <button id="gmail-verify-button" type="submit">Verificar mi correo</button>
+  <button class="gmail-back" type="button">Volver al login</button>
+</form>
+<!-- [ALERTAEDU-GMAIL-END] -->
+<p id="message" role="alert"></p><div class="note">El acceso está protegido por sesiones verificadas en la base de datos de Supabase. Usa únicamente datos ficticios para esta maqueta académica.</div></div></main><script>
+(async function(){const $=id=>document.getElementById(id);let setup=false;try{const r=await fetch('/api/auth/status');setup=!(await r.json()).initialized;}catch(e){$('message').textContent='No se pudo contactar al servidor.';return}if(setup){$('heading').textContent='Crear administrador';$('subtitle').textContent='Configura el acceso inicial a AlertaEdu. Si está en internet, escribe tu código privado de instalación.';$('submit').textContent='Crear cuenta de administrador';$('notice').hidden=false;$('setup-token-group').hidden=false;$('password').minLength=10;$('password').autocomplete='new-password';}else if(location.pathname==='/setup'){location.replace('/login');return} $('auth-form').onsubmit=async e=>{e.preventDefault();$('message').textContent='';$('submit').disabled=true;try{const data={username:$('username').value.trim(),password:$('password').value};let r=await fetch(setup?'/api/auth/bootstrap':'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json',...(setup?{'X-Setup-Token':$('setup-token').value.trim()}: {})},body:JSON.stringify(data),credentials:'same-origin'});const d=await r.json();if(!r.ok)throw Error(typeof d.detail==='string'?d.detail:'No se pudo iniciar sesión');if(setup){setup=false;$('heading').textContent='Iniciar sesión';$('subtitle').textContent='Cuenta creada. Ingresa tus credenciales.';$('submit').textContent='Ingresar a AlertaEdu →';$('notice').hidden=true;$('setup-token-group').hidden=true;$('setup-token').value='';$('message').style.color='#1e947c';$('message').textContent='Administrador creado correctamente. Pulsa ingresar de nuevo.';return}location.assign('/')}catch(err){$('message').textContent=err.message}finally{$('submit').disabled=false}};})();
+</script><script>
+// [ALERTAEDU-GMAIL-BEGIN]
+(function(){
+  const el=id=>document.getElementById(id);
+  const forms=['auth-form','recovery-form','gmail-forgot-form','gmail-reset-form','gmail-verify-form'];
+  const titles={login:'Iniciar sesión',forgot:'Recuperar con Gmail',reset:'Crear nueva contraseña',verify:'Confirmar mi Gmail'};
+  function view(mode){
+    const which={login:'auth-form',forgot:'gmail-forgot-form',reset:'gmail-reset-form',verify:'gmail-verify-form'}[mode];
+    for(const id of forms){const e=el(id);if(e)e.hidden=id!==which;}
+    el('gmail-forgot-link').hidden=mode!=='login';
+    el('gmail-verify-link').hidden=mode!=='login';
+    if(el('recovery-link'))el('recovery-link').hidden=mode!=='login';
+    el('heading').textContent=titles[mode]||titles.login;
+    el('subtitle').textContent=mode==='login'?'Ingresa tus credenciales para acceder a AlertaEdu.':'Recuperación segura mediante un correo verificado.';
+    el('message').textContent='';
+  }
+  function message(txt,error){const e=el('message');e.style.color=error?'#b33142':'#157f63';e.textContent=txt;}
+  async function post(url,body){
+    const response=await fetch(url,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok)throw Error(typeof data.detail==='string'?data.detail:'La operación no se completó');
+    return data;
+  }
+  el('gmail-forgot-link').onclick=()=>view('forgot');
+  el('gmail-verify-link').onclick=()=>view('verify');
+  for(const back of document.querySelectorAll('.gmail-back'))back.onclick=()=>view('login');
+  el('gmail-forgot-form').onsubmit=async e=>{
+    e.preventDefault();const b=el('gmail-send-button');b.disabled=true;
+    try{
+      const data=await post('/api/auth/email/forgot',{email:el('gmail-forgot-address').value.trim()});
+      view('reset');message(data.message+' Si recibes el correo en otro dispositivo, copia aquí el código.',false);
+    }catch(err){message(err.message,true)}finally{b.disabled=false}
+  };
+  el('gmail-reset-form').onsubmit=async e=>{
+    e.preventDefault();const b=el('gmail-reset-button');b.disabled=true;
+    try{
+      if(el('gmail-reset-password').value!==el('gmail-reset-confirm').value)throw Error('Las contraseñas no coinciden');
+      await post('/api/auth/email/reset',{token:el('gmail-reset-code').value.trim(),new_password:el('gmail-reset-password').value});
+      el('gmail-reset-form').reset();view('login');message('Contraseña recuperada. Inicia sesión con la nueva.',false);
+    }catch(err){message(err.message,true)}finally{b.disabled=false}
+  };
+  el('gmail-verify-form').onsubmit=async e=>{
+    e.preventDefault();const b=el('gmail-verify-button');b.disabled=true;
+    try{
+      await post('/api/auth/email/verify',{token:el('gmail-verify-code').value.trim()});
+      el('gmail-verify-form').reset();view('login');message('Gmail confirmado. Ya puedes recuperar tu contraseña por correo.',false);
+    }catch(err){message(err.message,true)}finally{b.disabled=false}
+  };
+  // El fragmento (hash) no llega al servidor ni aparece en las peticiones HTTP.
+  try{
+    const h=window.location.hash.slice(1),ix=h.indexOf('=');
+    if(ix>0){
+      const kind=h.slice(0,ix),token=decodeURIComponent(h.slice(ix+1));
+      if(['restablecer-gmail','verificar-correo'].includes(kind) && token.length>=30){
+        history.replaceState(null,'',window.location.pathname);
+        if(kind==='restablecer-gmail'){view('reset');el('gmail-reset-code').value=token;}
+        else{view('verify');el('gmail-verify-code').value=token;}
+      }
+    }
+  }catch(e){/* El usuario puede pegar el token manualmente */}
+  fetch('/api/auth/status').then(r=>r.json()).then(d=>{
+    if(!d.initialized){el('gmail-forgot-link').hidden=true;el('gmail-verify-link').hidden=true;}
+  }).catch(()=>{});
+})();
+// [ALERTAEDU-GMAIL-END]
+</script>
+</body></html>
