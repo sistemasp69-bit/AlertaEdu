@@ -18,22 +18,9 @@ services:
         sync: false
       - key: ALERTAEDU_SEED_DEMO
         value: '0'
-      - key: ALERTAEDU_EMAIL_PROVIDER
-        value: brevo
-      - key: BREVO_API_KEY
-        sync: false
-      - key: BREVO_FROM_EMAIL
-        sync: false
-      - key: BREVO_FROM_NAME
-        value: AlertaEdu
       - key: DATABASE_URL
         sync: false
-      - key: ALERTAEDU_BOOTSTRAP_TOKEN
-        sync: false
-      - key: ALERTAEDU_APPS_SCRIPT_URL
-        sync: false
-      - key: ALERTAEDU_APPS_SCRIPT_SECRET
-        sync: false
 
-# Para enlaces de recuperación se usa RENDER_EXTERNAL_URL automaticamente.
+# Configura el SMTP del proveedor de correo en Supabase Auth.
+# Para enlaces de recuperación se usa RENDER_EXTERNAL_URL automáticamente.
 # Si añades dominio personalizado, configura ALERTAEDU_BASE_URL=https://tu-dominio en Environment.

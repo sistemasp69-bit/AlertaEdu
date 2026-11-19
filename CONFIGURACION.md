@@ -1,4 +1,4 @@
-IMPORTANTE (RENDER): El despliegue usa Brevo como proveedor principal (ALERTAEDU_EMAIL_PROVIDER=brevo); Google Apps Script sigue disponible como alternativa. Lee CONFIGURAR_RENDER_GMAIL_APPS_SCRIPT.md.
+IMPORTANTE (RENDER): La autenticación activa es Supabase Auth. Configura el SMTP del proveedor de correo en Supabase Authentication; `BREVO_API_KEY` en Render no configura el restablecimiento de Supabase. Lee CONFIGURAR_RENDER_GMAIL_APPS_SCRIPT.md.
 
 # AlertaEdu — proyecto real Supabase conectado en la nube
 
@@ -22,7 +22,7 @@ Las 13 tablas del proyecto fueron creadas mediante Supabase, con RLS activado, c
 **Importante:** La URL directa que compartiste (`postgresql://postgres:[YOUR-DATABASE-PASSWORD]@db.lwjnmebmotcnkjrhhbyl.supabase.co:5432/postgres`) no contiene una contraseña auténtica. La red de tu PC puede requerir el *Session pooler* en vez del host directo. El valor `sb_publishable_...` es público y no funciona como password de PostgreSQL. Los archivos `.env` no deben subirse a GitHub ni enviarse por correo.
 
 ## Recuperación de contraseña por correo
-Se usan las tablas `gmail_verified_emails`, `gmail_pending_emails`, `gmail_reset_tokens` y `gmail_request_attempts`. En Render, el envío usa Brevo con `BREVO_API_KEY` y `BREVO_FROM_EMAIL` configurados de forma privada en Render Environment. En ejecución local todavía se puede usar Gmail SMTP con contraseña de aplicación. Entra con tu usuario, vincula y verifica tu dirección y después prueba **Olvidé mi contraseña**. El envío real todavía no está comprobado.
+La autenticación activa usa Supabase Auth. El formulario **Olvidé mi contraseña** solicita el enlace a Supabase, y el correo sale por el SMTP configurado en **Supabase > Authentication > SMTP Settings**. Si usas Brevo, configura ahí sus credenciales SMTP y el remitente verificado; la API key de Brevo en Render no conecta este flujo. Añade la URL HTTPS `/reset-password` a las redirecciones permitidas de Supabase. Las tablas `gmail_verified_emails`, `gmail_pending_emails`, `gmail_reset_tokens` y `gmail_request_attempts` pertenecen al flujo heredado de cuentas locales, no al reset activo de Supabase. El envío real todavía no está comprobado.
 
 ## Acerca de los comandos Supabase CLI
 Los comandos que enviaste (`supabase login`, `supabase init`, `supabase link --project-ref lwjnmebmotcnkjrhhbyl`) vinculan una carpeta local con el proyecto para trabajar con migraciones de esquema, pero **no configuran `DATABASE_URL` de FastAPI**. No son necesarios para ejecutar AlertaEdu en tu PC; la base ya existe en la nube. Si usas CLI, instala una versión vigente, revisa `supabase --help` (CLI v3 tiene cambios) y ejecútalos en tu propia carpeta de trabajo. No guardes tokens de acceso en este ZIP.

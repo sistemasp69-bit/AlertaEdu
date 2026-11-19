@@ -3,6 +3,7 @@ The backend validates Supabase access tokens before accessing academic data.
 """
 import os
 import secrets
+import logging
 import httpx
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -12,6 +13,7 @@ router = APIRouter(prefix='/api/supabase')
 ACCESS_COOKIE='alertaedu_sb_access'
 REFRESH_COOKIE='alertaedu_sb_refresh'
 CSRF_COOKIE='alertaedu_sb_csrf'
+LOG=logging.getLogger('alertaedu.supabase_auth')
 
 
 def enabled():
@@ -139,11 +141,16 @@ async def forgot(form:EmailOnly):
     if not base:
         base=os.getenv('RENDER_EXTERNAL_URL','').rstrip('/') or 'http://127.0.0.1:8000'
     redirect=base+'/reset-password'
-    # GoTrue receives redirect_to query param; no email enumeration on response.
+    # Keep account-existence responses generic, but surface provider failures.
     async with httpx.AsyncClient(timeout=12) as client:
         try:
-            await client.post(url()+'/auth/v1/recover',params={'redirect_to':redirect},json={'email':str(form.email)},headers=headers())
-        except httpx.HTTPError: pass
+            response=await client.post(url()+'/auth/v1/recover',params={'redirect_to':redirect},json={'email':str(form.email)},headers=headers())
+        except httpx.HTTPError as exc:
+            LOG.warning('Supabase Auth recovery request failed (%s)',type(exc).__name__)
+            raise HTTPException(503,'No se pudo procesar la solicitud. Intenta más tarde.') from exc
+    if not 200 <= response.status_code < 300:
+        LOG.warning('Supabase Auth recovery request returned HTTP %s',response.status_code)
+        raise HTTPException(503,'No se pudo procesar la solicitud. Intenta más tarde.')
     return {'message':'Si el correo tiene una cuenta, recibirás un enlace para restablecer la contraseña.'}
 
 

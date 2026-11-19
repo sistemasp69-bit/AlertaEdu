@@ -21,10 +21,11 @@ class TestArreglos(unittest.TestCase):
         self.assertIn("getpass.getpass('ALERTAEDU_SHARED_SECRET", source)
         self.assertIn("data.get('ok') is not True", source)
 
-    def test_render_configura_brevo_y_conserva_apps_script(self):
+    def test_render_usa_supabase_auth_y_no_exige_brevo_api(self):
         text = (ROOT / 'render.yaml').read_text(encoding='utf-8')
-        self.assertIn('value: brevo', text)
-        for key in ('BREVO_API_KEY','BREVO_FROM_EMAIL','DATABASE_URL','ALERTAEDU_APPS_SCRIPT_URL','ALERTAEDU_APPS_SCRIPT_SECRET','ALERTAEDU_BOOTSTRAP_TOKEN'):
+        self.assertIn('key: ALERTAEDU_AUTH_PROVIDER\n        value: supabase', text)
+        self.assertNotIn('key: BREVO_API_KEY', text)
+        for key in ('DATABASE_URL','SUPABASE_PUBLISHABLE_KEY'):
             self.assertIn('key: '+key, text)
 
 if __name__ == '__main__': unittest.main()
